@@ -21,23 +21,38 @@ $(function () {
     var c = canvas.get()[0].getContext("2d")
 
     setInterval(function () {
-        // this code will run over and over again...
+        function drawBranch(l) {
+  // Make longer branches wider
+  var w = 0.5 + l / 30;
+  c.fillRect(w / 2, 0, w, -l);
+  c.save();
+  c.translate(0, -l);
+  if (l > 1) {
+    // Start at -80 degrees
+    var a = -Math.PI * 4 / 9;
+    // Draw three branches
+    for (var i = 0; i < 3; i = i + 1) {
+      // The length of our new branches
+      var l2 = l * 0.5;
+      // Make the middle branch bigger
+      if (i == 1) { l2 = l2 + 0.3 * l; }
+      
+      c.save();
+      c.rotate(a);
+      drawBranch(l2);
+      c.restore();
+      
+      // Add 90 degrees for the next branch
+      a = a + Math.PI / 2;
+    }
+  }
+  c.restore();
+}
 
-        // this paints just a bit of whiteness over everything
-        c.fillStyle = "rgba(255, 0, 0, 0.05)"
-        c.fillRect(0, 0, width, height)
+c.fillStyle = "green";
+c.translate(170, 270);
+drawBranch(60);
 
-        // let's decide where to place a circle
-        var x = width * Math.random()
-        var y = height * Math.random()
-        var size = 100 * Math.random()
-
-        // now let's actually draw the circle
-        c.beginPath()
-        c.arc(x, y, size, 0, Math.PI*2, true)
-        c.closePath()
-        c.fillStyle = "blue"
-        c.fill()
     }, 100)
 })
 
